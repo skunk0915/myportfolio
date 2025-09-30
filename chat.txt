@@ -6,3 +6,4 @@
 2025-09-30 14:50 WordPress制作実績画像にサイトリンク追加依頼 akariju画像にhttp://flow-t.net/akariju/wpへのリンクを追加完了
 2025-09-30 14:55 リンククリック不可の不具合修正依頼 aタグをabsolute inset-0 z-10に変更し画像全体でクリック可能に修正完了
 2025-09-30 15:00 kakemochi画像にもサイトリンク追加依頼 kakemochi.pngにhttps://flow-t.net/kakemochi_devへのリンク追加完了
+2025-09-30 15:05 ヘッダー左のサイトロゴ削除依頼 index.htmlから「WEB制作」「Portfolio」テキストとCodeアイコンを含むロゴ要素を削除完了
