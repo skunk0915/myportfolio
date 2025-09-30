@@ -1,0 +1,1 @@
+2025-09-30 00:00 WordPress制作実績画像の縦横比とレイアウト修正依頼 画像コンテナをaspect-video、object-containに変更し画像パス修正完了
