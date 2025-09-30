@@ -4692,6 +4692,56 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
     [data-side=right] .\[\[data-side\=right\]_\&\]\:cursor-e-resize {
       cursor: e-resize;
     }
+
+    /* 占いサイトセクション背景スクロールアニメーション */
+    .uranai-bg-wrapper {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      opacity: 0.15;
+      pointer-events: none;
+    }
+
+    .uranai-scroll-row {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+      will-change: transform;
+    }
+
+    .uranai-scroll-row img {
+      width: 150px;
+      height: 100px;
+      object-fit: cover;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+
+    @keyframes uranai-scroll-left {
+      0% {
+        transform: translateX(0);
+      }
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    @keyframes uranai-scroll-right {
+      0% {
+        transform: translateX(-50%);
+      }
+      100% {
+        transform: translateX(0);
+      }
+    }
+
+    .uranai-scroll-left {
+      animation: uranai-scroll-left 120s linear infinite;
+    }
+
+    .uranai-scroll-right {
+      animation: uranai-scroll-right 120s linear infinite;
+    }
   </style>
 </head>
 
@@ -5782,7 +5832,8 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
               data-component-path="src/components/Portfolio.tsx" data-component-line="59"
               data-component-file="Portfolio.tsx" data-component-name="Card"
               data-component-content="%7B%22className%22%3A%22group%20hover%3Ashadow-xl%20transition-all%20duration-500%20bg-card%20border-border%20overflow-hidden%22%7D"
-              class="rounded-lg border text-card-foreground shadow-sm group hover:shadow-xl transition-all duration-500 bg-card border-border overflow-hidden">
+              class="rounded-lg border text-card-foreground shadow-sm group hover:shadow-xl transition-all duration-500 bg-card border-border overflow-hidden relative">
+              <div class="uranai-bg-wrapper" id="uranai-bg"></div>
               <div data-lov-id="src/components/Portfolio.tsx:60:14" data-lov-name="CardContent"
                 data-component-path="src/components/Portfolio.tsx" data-component-line="60"
                 data-component-file="Portfolio.tsx" data-component-name="CardContent"
@@ -6443,6 +6494,51 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
   <script src="https://cdn.gpteng.co/lovable.js" type="module"></script>
   <script type="module" src="/src/main.tsx"></script>
 
+  <script>
+    // 占いサイト背景スクロールアニメーション
+    document.addEventListener('DOMContentLoaded', function() {
+      const bgWrapper = document.getElementById('uranai-bg');
+      if (!bgWrapper) return;
+
+      // 画像リスト
+      const images = [
+        'aiga.jpg', 'aoki.jpg', 'chameleon.jpg', 'chamen.jpg', 'chamet.jpg',
+        'chazz.jpg', 'chigumi.jpg', 'chiharu.jpg', 'coppa.jpg', 'energy.jpg',
+        'epc.jpg', 'fujita.jpg', 'gaia.jpg', 'gyoku.jpg', 'hcd.jpg',
+        'ichild.jpg', 'ishii.jpg', 'keiko.jpg', 'kiko.jpg', 'kirei.jpg',
+        'klarale.jpg', 'kmo2.jpg', 'lemurian.jpg', 'luna.jpg', 'macalon.jpg',
+        'matsuyama.jpg', 'merisa.jpg', 'mermaid.jpg', 'miesha.jpg', 'miku.jpg',
+        'miyokof.jpg', 'mlo.jpg', 'narusawa.jpg', 'noda.jpg', 'okac.jpg',
+        'ophelia.jpg', 'pof.jpg', 'rie.jpg', 'risui.jpg', 'shape.jpg',
+        'shintaku.jpg', 'shokita.jpg', 'smate.jpg', 'sugano.jpg', 'susan.jpg',
+        'takashima.jpg', 'tnoel.jpg', 'ukyo.jpg', 'yuki.jpg'
+      ];
+
+      const basePath = 'src/assets/ss-uranai/';
+      const rowCount = 4; // 行数
+      const imagesPerRow = 12; // 1行あたりの画像数
+
+      // 行ごとに画像を配置
+      for (let row = 0; row < rowCount; row++) {
+        const rowDiv = document.createElement('div');
+        rowDiv.className = 'uranai-scroll-row ' + (row % 2 === 0 ? 'uranai-scroll-left' : 'uranai-scroll-right');
+
+        // 画像を2セット配置（ループ用）
+        for (let set = 0; set < 2; set++) {
+          for (let i = 0; i < imagesPerRow; i++) {
+            const imgIndex = (row * imagesPerRow + i) % images.length;
+            const img = document.createElement('img');
+            img.src = basePath + images[imgIndex];
+            img.alt = '';
+            img.loading = 'lazy';
+            rowDiv.appendChild(img);
+          }
+        }
+
+        bgWrapper.appendChild(rowDiv);
+      }
+    });
+  </script>
 
 </body>
 
