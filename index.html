@@ -8,6 +8,9 @@
 
   <script type="module" src="/@vite/client"></script>
 
+  <!-- EmailJS CDN -->
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>WEB制作ポートフォリオ - 15年の実績でWordPress・SEO対策をサポート</title>
@@ -6468,7 +6471,7 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
                 <form data-lov-id="src/components/Contact.tsx:119:14" data-lov-name="form"
                   data-component-path="src/components/Contact.tsx" data-component-line="119"
                   data-component-file="Contact.tsx" data-component-name="form"
-                  data-component-content="%7B%22className%22%3A%22space-y-6%22%7D" class="space-y-6">
+                  data-component-content="%7B%22className%22%3A%22space-y-6%22%7D" class="space-y-6" id="contact-form">
                   <div data-lov-id="src/components/Contact.tsx:120:16" data-lov-name="div"
                     data-component-path="src/components/Contact.tsx" data-component-line="120"
                     data-component-file="Contact.tsx" data-component-name="div" data-component-content="%7B%7D"><label
@@ -6816,6 +6819,280 @@ Constrain images and videos to the parent width and preserve their intrinsic asp
         });
       }
     });
+
+    // EmailJS初期化
+    (function(){
+      emailjs.init({
+        publicKey: "ACNdwxndoxXgfYqao",
+      });
+    })();
+
+    // お問い合わせフォーム送信処理
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+      contactForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // フォームデータを取得
+        const formData = new FormData(contactForm);
+        const name = formData.get('name');
+        const email = formData.get('email');
+        const subject = formData.get('subject');
+        const message = formData.get('message');
+
+        // 送信ボタンを無効化
+        const submitButton = contactForm.querySelector('button[type="submit"]');
+        const originalText = submitButton.textContent;
+        submitButton.textContent = '送信中...';
+        submitButton.disabled = true;
+
+        // EmailJSでメール送信
+        emailjs.send('service_izut4wi', 'template_a5uf0x7', {
+          to_email: 'skunk0915@gmail.com',
+          from_name: name,
+          from_email: email,
+          subject: subject,
+          message: message,
+        })
+        .then(function(response) {
+          console.log('SUCCESS!', response.status, response.text);
+
+          // モーダルを表示
+          showSuccessModal();
+
+          // フォームをリセット
+          contactForm.reset();
+
+          // ボタンを元に戻す
+          submitButton.textContent = originalText;
+          submitButton.disabled = false;
+        }, function(error) {
+          console.log('FAILED...', error);
+
+          // エラーモーダルを表示
+          showErrorModal();
+
+          // ボタンを元に戻す
+          submitButton.textContent = originalText;
+          submitButton.disabled = false;
+        });
+      });
+    }
+
+    // 送信完了モーダルを表示する関数
+    function showSuccessModal() {
+      // モーダルの背景
+      const modalOverlay = document.createElement('div');
+      modalOverlay.id = 'contact-modal-overlay';
+      modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      `;
+
+      // モーダルコンテンツ
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      `;
+
+      // チェックアイコン
+      const checkIcon = document.createElement('div');
+      checkIcon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #22c55e; margin: 0 auto 1rem;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="m9 12 2 2 4-4"></path>
+        </svg>
+      `;
+
+      // メッセージテキスト
+      const messageText = document.createElement('h3');
+      messageText.textContent = '送信しました';
+      messageText.style.cssText = `
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+      `;
+
+      const subText = document.createElement('p');
+      subText.textContent = 'お問い合わせありがとうございます';
+      subText.style.cssText = `
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      `;
+
+      // 閉じるボタン
+      const closeButton = document.createElement('button');
+      closeButton.textContent = '閉じる';
+      closeButton.style.cssText = `
+        background-color: #3b82f6;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      `;
+      closeButton.onmouseover = () => closeButton.style.backgroundColor = '#2563eb';
+      closeButton.onmouseout = () => closeButton.style.backgroundColor = '#3b82f6';
+
+      // モーダルを閉じる処理
+      const closeModal = () => {
+        modalOverlay.style.opacity = '0';
+        modalContent.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          document.body.removeChild(modalOverlay);
+        }, 300);
+      };
+
+      closeButton.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      // 要素を組み立て
+      modalContent.appendChild(checkIcon);
+      modalContent.appendChild(messageText);
+      modalContent.appendChild(subText);
+      modalContent.appendChild(closeButton);
+      modalOverlay.appendChild(modalContent);
+      document.body.appendChild(modalOverlay);
+
+      // アニメーション開始
+      setTimeout(() => {
+        modalOverlay.style.opacity = '1';
+        modalContent.style.transform = 'scale(1)';
+      }, 10);
+    }
+
+    // エラーモーダルを表示する関数
+    function showErrorModal() {
+      // モーダルの背景
+      const modalOverlay = document.createElement('div');
+      modalOverlay.id = 'contact-error-modal-overlay';
+      modalOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      `;
+
+      // モーダルコンテンツ
+      const modalContent = document.createElement('div');
+      modalContent.style.cssText = `
+        background: white;
+        padding: 2rem;
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        text-align: center;
+        max-width: 400px;
+        width: 90%;
+        transform: scale(0.9);
+        transition: transform 0.3s ease;
+      `;
+
+      // エラーアイコン
+      const errorIcon = document.createElement('div');
+      errorIcon.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: #ef4444; margin: 0 auto 1rem;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+      `;
+
+      // メッセージテキスト
+      const messageText = document.createElement('h3');
+      messageText.textContent = '送信に失敗しました';
+      messageText.style.cssText = `
+        font-size: 1.5rem;
+        font-weight: bold;
+        margin-bottom: 0.5rem;
+        color: #1f2937;
+      `;
+
+      const subText = document.createElement('p');
+      subText.textContent = 'もう一度お試しください';
+      subText.style.cssText = `
+        color: #6b7280;
+        margin-bottom: 1.5rem;
+      `;
+
+      // 閉じるボタン
+      const closeButton = document.createElement('button');
+      closeButton.textContent = '閉じる';
+      closeButton.style.cssText = `
+        background-color: #ef4444;
+        color: white;
+        padding: 0.75rem 2rem;
+        border: none;
+        border-radius: 0.375rem;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: background-color 0.2s;
+      `;
+      closeButton.onmouseover = () => closeButton.style.backgroundColor = '#dc2626';
+      closeButton.onmouseout = () => closeButton.style.backgroundColor = '#ef4444';
+
+      // モーダルを閉じる処理
+      const closeModal = () => {
+        modalOverlay.style.opacity = '0';
+        modalContent.style.transform = 'scale(0.9)';
+        setTimeout(() => {
+          document.body.removeChild(modalOverlay);
+        }, 300);
+      };
+
+      closeButton.addEventListener('click', closeModal);
+      modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) {
+          closeModal();
+        }
+      });
+
+      // 要素を組み立て
+      modalContent.appendChild(errorIcon);
+      modalContent.appendChild(messageText);
+      modalContent.appendChild(subText);
+      modalContent.appendChild(closeButton);
+      modalOverlay.appendChild(modalContent);
+      document.body.appendChild(modalOverlay);
+
+      // アニメーション開始
+      setTimeout(() => {
+        modalOverlay.style.opacity = '1';
+        modalContent.style.transform = 'scale(1)';
+      }, 10);
+    }
   </script>
 
 </body>

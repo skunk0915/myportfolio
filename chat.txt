@@ -9,3 +9,7 @@
 2025-09-30 15:05 ヘッダー左のサイトロゴ削除依頼 index.htmlから「WEB制作」「Portfolio」テキストとCodeアイコンを含むロゴ要素を削除完了
 2025-09-30 08:43 ヘッダーナビにページ内リンク追加依頼 スキル#about実績#workお問い合わせ#contactへのアンカーリンク追加完了
 2025-09-30 08:44 ページ内リンクをスムーズスクロールに変更依頼 htmlタグにscroll-behavior:smoothを追加完了
+2025-09-30 08:53 お問い合わせフォーム実装依頼 送信ボタン押下時に画面遷移せず「送信しました」モーダル表示機能追加完了
+2025-09-30 08:56 フォーム実メール送信機能追加依頼 EmailJS導入しskunk0915@gmail.comへ送信、エラーハンドリング実装完了
+2025-09-30 09:03 EmailJS認証情報設定依頼 PublicKey・ServiceID・TemplateIDを実際の値に設定完了
+2025-09-30 09:09 EmailJS ServiceID修正依頼 service_kqikmpfからservice_izut4wiに変更完了
